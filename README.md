@@ -1,2 +1,3 @@
-# DoonTime
-Real-time task management application
+# Tasnager
+
+Real-time task management application.
