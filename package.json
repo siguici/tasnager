@@ -1,19 +1,35 @@
 {
-  "name": "tasnager",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "serve dist"
-  },
-  "devDependencies": {
-    "serve": "^14.2.4",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.1"
-  },
-  "dependencies": {
-    "@builder.io/qwik": "^1.12.1"
-  }
+	"name": "tasnager",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"check": "biome ci . && knip",
+		"check:format": "biome format .",
+		"check:lint": "biome check .",
+		"debug": "bun check && bun test",
+		"dev": "vite",
+		"fix": "bun run unsed && bun lint && bun format",
+		"format": "biome format --write .",
+		"knip": "knip",
+		"lint": "biome check --write .",
+		"prepare": "husky && gitmoji -i",
+		"preview": "serve dist",
+		"prod": "tsc -b && vite build",
+		"unsed": "knip --fix"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/bun": "^1.2.4",
+		"@types/node": "^22.13.9",
+		"gitmoji-cli": "^9.5.0",
+		"husky": "^9.1.7",
+		"knip": "^5.45.0",
+		"serve": "^14.2.4",
+		"typescript": "~5.8.2",
+		"vite": "^6.2.1"
+	},
+	"dependencies": {
+		"@builder.io/qwik": "^1.12.1"
+	}
 }
