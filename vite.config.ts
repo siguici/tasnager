@@ -1,10 +1,10 @@
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import {
-	defineConfig,
 	type ConfigEnv,
-	ServerOptions,
-	loadEnv,
+	type ServerOptions,
 	type UserConfig,
+	defineConfig,
+	loadEnv,
 } from "vite";
 
 function defaultServerOptions(opts: {
@@ -29,9 +29,11 @@ function defaultConfig(opts: {
 	root: string | undefined;
 }): UserConfig {
 	return {
+		publicDir: "public",
 		plugins: [
 			qwikVite({
 				csr: true,
+				srcDir: "",
 			}),
 		],
 		preview: {
@@ -57,7 +59,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
 		(env.VITE_CONFIG_SERVER_BASE ?? "/") +
 		(command === "build" ? buildDirectory : "");
 	const port = Number(env.VITE_CONFIG_SERVER_PORT ?? 4000);
-	const root = env.VITE_CONFIG_SERVER_ROOT;
+	const root = env.VITE_CONFIG_SERVER_ROOT ?? "src/templates";
 
 	if (command === "serve") {
 		return {
