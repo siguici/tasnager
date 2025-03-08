@@ -20,10 +20,8 @@ fn main() {
 		secret_key: 'secret'
 	}
 
-	// Pass the App and context type and start the web server on port 8080
+	app.handle_static('public', true)!
 	app.serve_static('/favicon.ico', 'src/resources/favicon.ico')!
-	// makes all static files available.
-	app.mount_static_folder_at(os.resource_abs_path('./src'), '/')!
 
 	veb.run[App, Context](mut app, 8080)
 }

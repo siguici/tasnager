@@ -1,24 +1,24 @@
-# Binaries for programs and plugins
-main
-tasnager
-*.exe
-*.exe~
-*.so
-*.dylib
-*.dll
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Ignore binary output folders
-bin/
+node_modules
+dist
+dist-ssr
+*.local
 
-# Ignore common editor/system specific metadata
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-.idea/
-.vscode/
-*.iml
-
-# ENV
-.env
-
-# vweb and database
-*.db
-*.js
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
