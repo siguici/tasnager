@@ -1,18 +1,19 @@
 module main
 
-import vweb
+import net.http
+import veb
 
 @['/products'; get]
-pub fn (mut app App) products() !vweb.Result {
-	token := app.get_cookie('token') or {
-		app.set_status(400, '')
-		return app.text('${err}')
+pub fn (mut app App) products(mut ctx Context) !veb.Result {
+	token := ctx.get_cookie('token') or {
+		ctx.res.set_status(http.status_from_int(400))
+		return ctx.text('${err}')
 	}
 
 	user := get_user(token) or {
-		app.set_status(400, '')
-		return app.text('Failed to fetch data from the server. Error: ${err}')
+		ctx.res.set_status(http.status_from_int(400))
+		return ctx.text('Failed to fetch data from the server. Error: ${err}')
 	}
 
-	return $vweb.html()
+	return $veb.html()
 }

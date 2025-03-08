@@ -1,18 +1,10 @@
 module main
 
-import vweb
+import veb
 import databases
 import os
 
 const port = 8082
-
-struct App {
-	vweb.Context
-}
-
-pub fn (app App) before_request() {
-	println('[web] before_request: ${app.req.method} ${app.req.url}')
-}
 
 fn main() {
 	mut db := databases.create_db_connection() or { panic(err) }
@@ -24,16 +16,25 @@ fn main() {
 
 	db.close() or { panic(err) }
 
-	mut app := &App{}
-	app.serve_static('/favicon.ico', 'src/assets/favicon.ico')
-	// makes all static files available.
-	app.mount_static_folder_at(os.resource_abs_path('.'), '/')
+	mut app := &App{
+		secret_key: 'secret'
+	}
 
-	vweb.run(app, port)
+	// Pass the App and context type and start the web server on port 8080
+	app.serve_static('/favicon.ico', 'src/resources/favicon.ico')!
+	// makes all static files available.
+	app.mount_static_folder_at(os.resource_abs_path('./src'), '/')!
+
+	veb.run[App, Context](mut app, 8080)
 }
 
-pub fn (mut app App) index() vweb.Result {
+// This is how endpoints are defined in veb. This is the index route
+pub fn (app &App) hello(mut ctx Context) veb.Result {
+	return ctx.text('Hello Tasnager! The secret key is "${app.secret_key}"')
+}
+
+pub fn (mut app App) index() veb.Result {
 	title := 'Tasnager'
 
-	return $vweb.html()
+	return $veb.html()
 }

@@ -1,62 +1,63 @@
 module main
 
-import vweb
+import net.http
+import veb
 import encoding.base64
 import json
 
 @['/controller/products'; get]
-pub fn (mut app App) controller_get_all_products() vweb.Result {
-	token := app.req.header.get_custom('token') or { '' }
+pub fn (mut app App) controller_get_all_products(mut ctx Context) veb.Result {
+	token := ctx.req.header.get_custom('token') or { '' }
 
 	if !auth_verify(token) {
-		app.set_status(401, '')
-		return app.text('Not valid token')
+		ctx.res.set_status(http.status_from_int(401))
+		return ctx.text('Not valid token')
 	}
 
 	jwt_payload_stringify := base64.url_decode_str(token.split('.')[1])
 
 	jwt_payload := json.decode(JwtPayload, jwt_payload_stringify) or {
-		app.set_status(501, '')
-		return app.text('jwt decode error')
+		ctx.res.set_status(http.status_from_int(501))
+		return ctx.text('jwt decode error')
 	}
 
 	user_id := jwt_payload.sub
 
 	response := app.service_get_all_products_from(user_id.int()) or {
-		app.set_status(400, '')
-		return app.text('${err}')
+		ctx.res.set_status(http.status_from_int(400))
+		return ctx.text('${err}')
 	}
-	return app.json(response)
+	return ctx.json(response)
 	// return app.text('response')
 }
 
 @['/controller/product/create'; post]
-pub fn (mut app App) controller_create_product(product_name string) vweb.Result {
+pub fn (mut app App) controller_create_product(mut ctx Context, product_name string) veb.Result {
 	if product_name == '' {
-		app.set_status(400, '')
-		return app.text('product name cannot be empty')
+		ctx.res.set_status(http.status_from_int(400))
+		return ctx.text('product name cannot be empty')
 	}
 
-	token := app.req.header.get_custom('token') or { '' }
+	token := ctx.req.header.get_custom('token') or { '' }
 
 	if !auth_verify(token) {
-		app.set_status(401, '')
-		return app.text('Not valid token')
+		ctx.res.set_status(http.status_from_int(401))
+		return ctx.text('Not valid token')
 	}
 
 	jwt_payload_stringify := base64.url_decode_str(token.split('.')[1])
 
 	jwt_payload := json.decode(JwtPayload, jwt_payload_stringify) or {
-		app.set_status(501, '')
-		return app.text('jwt decode error')
+		ctx.res.set_status(http.status_from_int(501))
+		return ctx.text('jwt decode error')
 	}
 
 	user_id := jwt_payload.sub
 
 	app.service_add_product(product_name, user_id.int()) or {
-		app.set_status(400, '')
-		return app.text('error: ${err}')
+		ctx.res.set_status(http.status_from_int(400))
+		return ctx.text('error: ${err}')
 	}
-	app.set_status(201, '')
-	return app.text('product created successfully')
+	ctx.res.set_status(http.status_from_int(201))
+	return ctx.text('product created successfully')
 }
