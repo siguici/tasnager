@@ -12,6 +12,7 @@ pub mut:
 
 pub struct App {
 	veb.StaticHandler
+	veb.Middleware[Context]
 pub:
 	// In the app struct we store data that should be accessible by all endpoints.
 	// For example, a database or configuration values.
